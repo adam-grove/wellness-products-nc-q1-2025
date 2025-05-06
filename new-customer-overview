@@ -1,0 +1,11 @@
+select 
+date_trunc(date,month) as month,
+count(distinct transaction_id) as new_customers
+from `data_marts.transactions`
+where 1 = 1
+  and transaction_count = 1 -- new customers 
+  and extract(month from date) in (1,2,3)
+  and date >= "2020-01-01"
+  and country = "UK" 
+group by month
+order by month
