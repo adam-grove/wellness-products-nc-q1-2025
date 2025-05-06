@@ -1,0 +1,29 @@
+
+with npd_products as 
+(
+select 
+distinct
+transaction_id
+from `data_marts.transaction_products`
+where 1 = 1
+  and transaction_count = 1 -- new customers 
+  and extract(month from transaction_date) in (1,2,3)
+  and transaction_date >= "2025-01-01"
+  and country = "UK"
+  and config_sku in ("POWCOLL360", "PILMARCOLL360", "POWMUSHCOFF", "PILLIONMANE", "PILACVGUMMIE", "POWSUNE", "PILMAGNSM", "POWAIGREENS") 
+-- group by month, product_name
+-- order by month
+)
+
+select  
+date_trunc(date,month) as month,
+sum(total_revenue_gbp) / count(distinct transaction_id)
+from `data_marts.transactions`
+where 1=1
+  and transaction_id not in (select transaction_id from npd_products) -- not in npd products
+  -- and transaction_id in (select transaction_id from npd_products) -- in npd products
+  and extract(month from date) in (1,2,3)
+  and date >= "2025-01-01"
+  and country = "UK"
+group by month
+order by month
