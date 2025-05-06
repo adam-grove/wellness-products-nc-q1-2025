@@ -1,14 +1,14 @@
 select 
-date_trunc(transaction_date,month) as month,
-t1.config_sku,
+-- date_trunc(transaction_date,month) as month,
+t1.product_name,
 ifnull(count(distinct transaction_id),0) as new_customers
-from `data_marts.transaction_products` t1
+from data_marts.transaction_products t1
 where 1 = 1
   and transaction_count = 1 -- new customers 
-  and extract(month from transaction_date) in (1,2,3)
-  and transaction_date >= "2025-01-01"
+  -- and extract(month from transaction_date) in (1,2,3)
+  -- and transaction_date >= "2025-01-01"
   and country = "UK"
   and t1.config_sku in ("POWCOLL360", "PILMARCOLL360", "POWMUSHCOFF", "PILLIONMANE", "PILACVGUMMIE", "POWSUNE", "PILMAGNSM", "POWAIGREENS") 
   and transaction_date < date_add(release_date , interval 31 day)
-group by month, config_sku
-order by month
+group by  product_name
+-- order by month
